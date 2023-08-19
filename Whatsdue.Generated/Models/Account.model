@@ -1,0 +1,22 @@
+schema {
+	int Id,
+	string Email,
+	string FirstName,
+	string LastName
+}
+
+repo {
+	dbo.Account_List()
+		=> List<Account>,
+
+	dbo.Account_GetById(int Id)
+		=> Account
+}
+
+service {
+	List()
+		=> List<Account>,
+
+	Get(int Id)
+		=> Account
+}

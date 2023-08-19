@@ -1,0 +1,28 @@
+﻿@page "/"
+@inject Account.IService accounts
+
+<PageTitle>Blazor</PageTitle>
+
+<h4 class="mb-4">Loaded via API</h4>
+
+@code {
+    private List<Account> allAccounts = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        allAccounts = await accounts.List();
+    }
+}
+
+@foreach (var account in allAccounts)
+{
+    <p>@account.FirstName @account.LastName (ID @account.Id): @account.Email</p>
+}
+<br />
+
+<a href="UsersList" class="d-inline-block mb-2">Go to MVC</a>
+<br />
+
+<a href="Account/List">Go to /List</a>
+&nbsp;|&nbsp;
+<a href="Account/Get/1">Go to /Get/{Id}</a>
