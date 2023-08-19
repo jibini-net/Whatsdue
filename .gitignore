@@ -364,3 +364,4 @@ FodyWeavers.xsd
 
 *.Development.json
 *.Production.json
+*.g.cs
