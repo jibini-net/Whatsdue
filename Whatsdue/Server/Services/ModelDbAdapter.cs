@@ -78,8 +78,7 @@ public class ModelDbAdapter : IModelDbAdapter
         T _return = default;
         await ExecuteUsingResultsAsync(procName, args, (reader) =>
         {
-            var single = IsSingle(typeof(T), out var modelType);
-            if (single)
+            if (IsSingle(typeof(T), out var modelType))
             {
                 _return = reader.Read()
                     ? (T)BuildRow(typeof(T), reader)
@@ -116,8 +115,7 @@ public class ModelDbAdapter : IModelDbAdapter
                 jsonBuilder.Append("[]");
             }
 
-            var single = IsSingle(typeof(T), out var modelType);
-            if (single)
+            if (IsSingle(typeof(T), out var modelType))
             {
                 var listType = typeof(List<>).MakeGenericType(modelType);
                 var list = JsonSerializer.Deserialize(jsonBuilder.ToString(), listType);

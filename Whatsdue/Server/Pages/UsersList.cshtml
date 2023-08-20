@@ -6,7 +6,7 @@
 <title>MVC</title>
 
 @{
-    var allAccounts = await accounts.List();
+    var allAccounts = await accounts.List(0, 20);
 }
 
 <h4 class="mb-4">Loaded from SQL serverside</h4>

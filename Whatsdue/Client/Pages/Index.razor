@@ -10,7 +10,7 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        allAccounts = await accounts.List();
+        allAccounts = await accounts.List(0, 20);
     }
 }
 
