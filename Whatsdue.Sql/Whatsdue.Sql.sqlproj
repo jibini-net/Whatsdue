@@ -62,7 +62,13 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Account.sql" />
-    <Build Include="Stored Procedures\Account_GetById.sql" />
+    <Build Include="Stored Procedures\Account_GetWithPassword.sql" />
     <Build Include="Stored Procedures\Account_List.sql" />
+    <Build Include="Stored Procedures\Account_SignUp.sql" />
+    <Build Include="Stored Procedures\Account_SetResetToken.sql" />
+    <Build Include="Stored Procedures\Account_GetById.sql" />
+    <Build Include="Stored Procedures\Account_GetWithReset.sql" />
+    <Build Include="Stored Procedures\Account_GetByResetToken.sql" />
+    <Build Include="Stored Procedures\Account_ResetPassword.sql" />
   </ItemGroup>
 </Project>

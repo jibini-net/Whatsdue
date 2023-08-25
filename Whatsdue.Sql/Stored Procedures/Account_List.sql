@@ -3,7 +3,11 @@
     @count INT
 AS
 
-    SELECT * FROM Account
+    SELECT Id,
+        Email,
+        FirstName,
+        LastName
+    FROM Account
     ORDER BY LastName, FirstName, Id
 
     OFFSET (@page * @count) ROWS

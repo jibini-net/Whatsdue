@@ -38,9 +38,9 @@ repo {
 		=> Account.WithReset,
 
 	dbo.Account_GetByResetToken(string resetToken)
-		=> Account,
+		=> Account.WithReset,
 
-	dbo.Account_ResetPassword(string resetToken, string passwordHash)
+	dbo.Account_ResetPassword(string resetToken, string passwordScheme, string passwordHash, string passwordSalt)
 		=> Account
 }
 

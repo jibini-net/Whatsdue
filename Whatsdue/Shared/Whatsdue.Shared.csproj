@@ -11,9 +11,9 @@
     <SupportedPlatform Include="browser" />
   </ItemGroup>
 
-	<ItemGroup>
-		<Compile Include="..\..\Whatsdue.Generated\Generated\**\*.g.cs" />
-	</ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Whatsdue.Generated\Generated\**\*.g.cs" />
+  </ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />

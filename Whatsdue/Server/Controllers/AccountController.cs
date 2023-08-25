@@ -14,64 +14,103 @@ public class AccountController : ControllerBase
         this.accounts = accounts;
     }
 
-    [Route("List")]
+    public record ListParams (
+        int page,
+        int count);
+
+    [HttpPost("List")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> List(int page, int count)
+    [Produces(typeof(List<Account>))]
+    public async Task<IActionResult> List([FromBody] ListParams pars)
     {
-        var list = await accounts.List(page, count);
+        var list = await accounts.List(pars.page, pars.count);
         return Ok(list);
     }
 
-    [Route("Get/{Id}")]
+    public record GetParams (
+        int id);
+
+    [HttpPost("Get")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Get(int Id)
+    [Produces(typeof(Account))]
+    public async Task<IActionResult> Get([FromBody] GetParams pars)
     {
-        var account = await accounts.Get(Id);
+        var account = await accounts.Get(pars.id);
         return account is null
             ? NotFound()
             : Ok(account);
     }
 
-    [Route("AttemptLogin")]
+    public record AttemptLoginParams (
+        string email,
+        string password);
+
+    [HttpPost("AttemptLogin")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> AttemptLogin(string email, string password)
+    [Produces(typeof(Account))]
+    public async Task<IActionResult> AttemptLogin([FromBody] AttemptLoginParams pars)
     {
-        var account = await accounts.AttemptLogin(email, password);
+        var account = await accounts.AttemptLogin(pars.email, pars.password);
         return account is null
             ? Unauthorized()
             : Ok(account);
     }
+    /*
+    public record SignUpParams(
+        string email,
+        string firstName,
+        string lastName);
 
-    [Route("BeginReset")]
+    [HttpPost("SignUp")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status4...)]
+    public async Task<IActionResult> SignUp([FromBody] SignUpParams pars)
+    {
+        var list = await accounts.SignUp(...);
+        return Ok(list);
+    }
+    */
+    public record BeginResetParams (
+        string email);
+
+    [HttpPost("BeginReset")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> BeginReset(string email)
+    public async Task<IActionResult> BeginReset([FromBody] BeginResetParams pars)
     {
-        await accounts.BeginReset(email);
+        await accounts.BeginReset(pars.email);
         return Ok();
     }
 
-    [Route("GetResetDetails")]
+    public record GetResetDetailsParams (
+        string resetToken);
+
+    [HttpPost("GetResetDetails")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> GetResetDetails(string resetToken, string password)
+    [Produces(typeof(Account))]
+    public async Task<IActionResult> GetResetDetails([FromBody] GetResetDetailsParams pars)
     {
-        var account = await accounts.GetResetDetails(resetToken);
+        var account = await accounts.GetResetDetails(pars.resetToken);
         return account is null
             ? Unauthorized()
             : Ok(account);
     }
 
-    [Route("ResetPassword")]
+    public record ResetPasswordParams(
+        string resetToken,
+        string password);
+
+    [HttpPost("ResetPassword")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> ResetPassword(string resetToken, string password)
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordParams pars)
     {
-        await accounts.ResetPassword(resetToken, password);
+        await accounts.ResetPassword(pars.resetToken, pars.password);
         return Ok();
     }
 }

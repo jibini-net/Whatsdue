@@ -21,16 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Tools\SourceGenerator\" />
-    <Folder Include="Tools\SourceGenerator.VsAdapter\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Analyzer Include="Tools\SourceGenerator.VsAdapter\Release\netstandard2.0\SourceGenerator.VsAdapter.dll" />
+    <ProjectReference Include="..\SourceGeneration\SourceGenerator.VsAdapter\SourceGenerator.VsAdapter.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
 </Project>

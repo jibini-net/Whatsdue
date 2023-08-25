@@ -11,6 +11,7 @@ public class AccountService : Account.IBackendService
     private readonly Account.Repository repo;
     public AccountService(ILogger<AccountService> logger, Account.Repository repo)
     {
+        this.logger = logger;
         this.repo = repo;
     }
 
@@ -112,7 +113,7 @@ public class AccountService : Account.IBackendService
         var salt = CreateSalt();
         var passwordHash = CalculateHash(CURRENT_PASSWORD_SCHEME, password, salt);
 
-        var account = await repo.dbo__Account_ResetPassword(resetToken, passwordHash);
+        var account = await repo.dbo__Account_ResetPassword(resetToken, CURRENT_PASSWORD_SCHEME, passwordHash, salt);
         if (account is null)
         {
             logger.LogWarning("User attempted to reset password with invalid token");

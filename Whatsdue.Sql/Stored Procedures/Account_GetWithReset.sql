@@ -1,11 +1,13 @@
-﻿CREATE PROCEDURE [dbo].[Account_GetById]
+﻿CREATE PROCEDURE [dbo].[Account_GetWithReset]
     @id INT
 AS
 
     SELECT Id,
         Email,
         FirstName,
-        LastName
+        LastName,
+        ResetToken,
+        ResetIssued
     FROM Account
     WHERE Id = @id
 
