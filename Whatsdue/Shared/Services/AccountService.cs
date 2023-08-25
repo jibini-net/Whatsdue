@@ -73,17 +73,24 @@ public class AccountService : Account.IBackendService
         }
         */
 
-        var hash = CalculateHash(account.PasswordScheme, password, account.PasswordSalt);
-        if (hash == account.PasswordHash)
+        try
         {
-            logger.LogInformation("User '{0}' has provided valid login credentials", email);
-        } else
+            var hash = CalculateHash(account.PasswordScheme, password, account.PasswordSalt);
+            if (hash == account.PasswordHash)
+            {
+                logger.LogInformation("User '{0}' has provided valid login credentials", email);
+            } else
+            {
+                logger.LogWarning("User '{0}' attempted log in with invalid password", email);
+                return null;
+            }
+
+            return await repo.dbo__Account_GetById(account.Id);
+        } catch (Exception ex)
         {
-            logger.LogWarning("User '{0}' attempted log in with invalid password", email);
+            logger.LogError(ex, "User '{0}' encountered an error during login", email);
             return null;
         }
-
-        return await repo.dbo__Account_GetById(account.Id);
     }
 
     public async Task BeginReset(string email)

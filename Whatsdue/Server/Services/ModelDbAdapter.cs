@@ -48,7 +48,12 @@ public class ModelDbAdapter : IModelDbAdapter
             var prop = type.GetProperty(value.ColumnName);
             if (prop is not null)
             {
-                prop.SetValue(instance, reader[value.ColumnName]);
+                var propValue = reader[value.ColumnName];
+                if (propValue == DBNull.Value)
+                {
+                    propValue = null;
+                }
+                prop.SetValue(instance, propValue);
             }
         }
         return instance;
@@ -108,7 +113,12 @@ public class ModelDbAdapter : IModelDbAdapter
             var jsonBuilder = new StringBuilder();
             while (reader.Read())
             {
-                jsonBuilder.Append(reader[0] ?? "");
+                var json = reader[0];
+                if (json == DBNull.Value)
+                {
+                    json = null;
+                }
+                jsonBuilder.Append(json ?? "");
             }
             if (jsonBuilder.Length == 0)
             {
