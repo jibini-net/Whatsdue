@@ -10,8 +10,31 @@ builder.Services.AddScoped<IModelDbAdapter, ModelDbAdapter>();
 builder.Services.AddScoped<IModelDbWrapper, ModelDbWrapper>();
 builder.Services.AddWhatsdueBackend();
 
+builder.Services.AddApiVersioning((config) =>
+{
+    config.ReportApiVersions = true;
+});
+builder.Services.AddVersionedApiExplorer((config) =>
+{
+    config.GroupNameFormat = "'v'VVV";
+    config.SubstituteApiVersionInUrl = true;
+});
+
 builder.Services.AddSwaggerGen((config) =>
 {
+    string generateNestedName(Type type)
+    {
+        if (type.DeclaringType is null)
+        {
+            return type.Name;
+        } else
+        {
+            var parentName = generateNestedName(type.DeclaringType);
+            return $"{parentName}.{type.Name}";
+        }
+    }
+    config.CustomSchemaIds(generateNestedName);
+
     if (builder.Environment.IsDevelopment())
     {
         config.AddServer(new()
@@ -39,6 +62,12 @@ builder.Services.AddSwaggerGen((config) =>
             Title = "Whatsdue API",
             Version = "v1"
         });
+    //config.SwaggerDoc("v1.1",
+    //    new()
+    //    {
+    //        Title = "Whatsdue API",
+    //        Version = "v1.1"
+    //    });
 });
 
 var app = builder.Build();
@@ -59,6 +88,7 @@ app.UseRouting();
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
+
 app.UseSwagger((config) =>
 {
     config.RouteTemplate = "api/docs/{documentName}/swagger.json";
@@ -67,6 +97,7 @@ app.UseSwaggerUI((config) =>
 {
     config.RoutePrefix = "api/docs";
     config.SwaggerEndpoint("/api/docs/v1/swagger.json", "Whatsdue API v1");
+    //config.SwaggerEndpoint("/api/docs/v1.1/swagger.json", "Whatsdue API v1.1");
 });
 
 app.Run();

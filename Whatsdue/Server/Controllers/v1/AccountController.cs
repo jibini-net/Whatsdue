@@ -2,10 +2,11 @@ using Generated;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Whatsdue.Controllers;
+namespace Whatsdue.Controllers.v1;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/v{version:apiVersion}/[controller]")]
+[ApiVersion("1")]
 public class AccountController : ControllerBase
 {
     private readonly Account.IService accounts;
