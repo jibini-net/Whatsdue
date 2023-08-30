@@ -1,6 +1,7 @@
 using Generated;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Whatsdue.Server.Services;
 
 namespace Whatsdue.Controllers.v1;
 
@@ -15,103 +16,103 @@ public class AccountController : ControllerBase
         this.accounts = accounts;
     }
 
-    public record ListParams (
-        int page,
-        int count);
-
     [HttpPost("List")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [Produces(typeof(List<Account>))]
-    public async Task<IActionResult> List([FromBody] ListParams pars)
+    public async Task<IActionResult> List(
+        int page,
+        int count)
     {
-        var list = await accounts.List(pars.page, pars.count);
+        var list = await accounts.List(page, count);
         return Ok(list);
     }
-
-    public record GetParams (
-        int id);
 
     [HttpPost("Get")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Produces(typeof(Account))]
-    public async Task<IActionResult> Get([FromBody] GetParams pars)
+    public async Task<IActionResult> Get(
+        int id)
     {
-        var account = await accounts.Get(pars.id);
+        var account = await accounts.Get(id);
         return account is null
             ? NotFound()
             : Ok(account);
     }
-
-    public record AttemptLoginParams (
-        string email,
-        string password);
 
     [HttpPost("AttemptLogin")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [Produces(typeof(Account))]
-    public async Task<IActionResult> AttemptLogin([FromBody] AttemptLoginParams pars)
+    public async Task<IActionResult> AttemptLogin(
+        string email,
+        string password)
     {
-        var account = await accounts.AttemptLogin(pars.email, pars.password);
+        var account = await accounts.AttemptLogin(email, password);
         return account is null
             ? Unauthorized()
             : Ok(account);
     }
-    /*
-    public record SignUpParams(
-        string email,
-        string firstName,
-        string lastName);
 
+    /*
     [HttpPost("SignUp")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status4...)]
-    public async Task<IActionResult> SignUp([FromBody] SignUpParams pars)
+    public async Task<IActionResult> SignUp(
+        string email,
+        string firstName,
+        string lastName,
+        ...)
     {
         var list = await accounts.SignUp(...);
         return Ok(list);
     }
     */
-    public record BeginResetParams (
-        string email);
 
     [HttpPost("BeginReset")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> BeginReset([FromBody] BeginResetParams pars)
+    public async Task<IActionResult> BeginReset(
+        string email)
     {
-        await accounts.BeginReset(pars.email);
+        await accounts.BeginReset(email);
         return Ok();
     }
 
-    public record GetResetDetailsParams (
-        string resetToken);
+    [HttpPost("TestThing")]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> TestThing(
+        JsonList<Account> accounts,
+        JsonList<string> list2)
+    {
+        await Task.CompletedTask;
+        return Ok();
+    }
 
     [HttpPost("GetResetDetails")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [Produces(typeof(Account))]
-    public async Task<IActionResult> GetResetDetails([FromBody] GetResetDetailsParams pars)
+    public async Task<IActionResult> GetResetDetails(
+        string resetToken)
     {
-        var account = await accounts.GetResetDetails(pars.resetToken);
+        var account = await accounts.GetResetDetails(resetToken);
         return account is null
             ? Unauthorized()
             : Ok(account);
     }
 
-    public record ResetPasswordParams(
-        string resetToken,
-        string password);
-
     [HttpPost("ResetPassword")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordParams pars)
+    public async Task<IActionResult> ResetPassword(
+        string resetToken,
+        string password)
     {
-        await accounts.ResetPassword(pars.resetToken, pars.password);
+        await accounts.ResetPassword(resetToken, password);
         return Ok();
     }
 }

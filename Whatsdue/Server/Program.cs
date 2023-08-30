@@ -1,14 +1,23 @@
 using Generated;
+using Microsoft.AspNetCore.Mvc;
 using Whatsdue.Extensions;
 using Whatsdue.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
 builder.Services.AddScoped<IModelDbAdapter, ModelDbAdapter>();
 builder.Services.AddScoped<IModelDbWrapper, ModelDbWrapper>();
 builder.Services.AddWhatsdueBackend();
+
+builder.Services.AddControllersWithViews((config) =>
+{
+    config.ValueProviderFactories.Insert(0, new JsonBodyValueProviderFactory());
+});
+builder.Services.Configure<ApiBehaviorOptions>((config) =>
+{
+    config.SuppressInferBindingSourcesForParameters = true;
+    config.SuppressModelStateInvalidFilter = true;
+});
+builder.Services.AddRazorPages();
 
 builder.Services.AddApiVersioning((config) =>
 {
