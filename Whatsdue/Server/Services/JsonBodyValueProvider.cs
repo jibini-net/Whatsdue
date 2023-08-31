@@ -20,6 +20,7 @@ public class JsonBodyValueProvider : IValueProvider
     {
         var split = key.Split(".");
         JsonNode pointer = json;
+
         foreach (var item in split)
         {
             if (pointer is not JsonObject
@@ -37,6 +38,7 @@ public class JsonBodyValueProvider : IValueProvider
                 return new(new(arrayJson));
             }
         }
+
         return new(new(pointer?.ToString()));
     }
 }
@@ -49,9 +51,11 @@ public class JsonBodyValueProviderFactory : IValueProviderFactory
         {
             return;
         }
+
         context.ActionContext.HttpContext.Request.EnableBuffering();
         var json = await context.ActionContext.HttpContext.Request.ReadFromJsonAsync<JsonObject>();
         context.ActionContext.HttpContext.Request.Body.Position = 0;
+        
         context.ValueProviders.Insert(0, new JsonBodyValueProvider(json));
     }
 }

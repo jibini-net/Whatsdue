@@ -2,7 +2,7 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Text;
-using System.Text.Json;
+using Whatsdue.Extensions;
 
 namespace Whatsdue.Services;
 
@@ -128,7 +128,7 @@ public class ModelDbAdapter : IModelDbAdapter
             if (IsSingle(typeof(T), out var modelType))
             {
                 var listType = typeof(List<>).MakeGenericType(modelType);
-                var list = JsonSerializer.Deserialize(jsonBuilder.ToString(), listType);
+                var list = jsonBuilder.ToString().FromJson(listType);
 
                 var firstOrDefault = typeof(Enumerable)
                     .GetMethods()
@@ -140,7 +140,7 @@ public class ModelDbAdapter : IModelDbAdapter
                 _return = (T)firstOrDefault.Invoke(null, new[] { list });
             } else
             {
-                _return = JsonSerializer.Deserialize<T>(jsonBuilder.ToString());
+                _return = jsonBuilder.ToString().FromJson<T>();
             }
         });
         return _return;

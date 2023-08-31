@@ -80,15 +80,32 @@ public class AccountController : ControllerBase
         return Ok();
     }
 
+    public class TestNestedList
+    {
+        public string Name2 { get; set; } = "";
+        public JsonList<Account> Accounts2 { get; set; } = new();
+    }
+
     [HttpPost("TestThing")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> TestThing(
         JsonList<Account> accounts,
-        JsonList<string> list2)
+        JsonList<string> list2,
+        JsonList<int> list3,
+        JsonList<decimal> list4,
+        TestNestedList nested)
     {
         await Task.CompletedTask;
-        return Ok();
+
+        return Ok(new
+        {
+            accounts,
+            list2,
+            list3,
+            list4,
+            nested
+        });
     }
 
     [HttpPost("GetResetDetails")]

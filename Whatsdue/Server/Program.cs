@@ -107,6 +107,7 @@ app.UseSwaggerUI((config) =>
     config.RoutePrefix = "api/docs";
     config.SwaggerEndpoint("/api/docs/v1/swagger.json", "Whatsdue API v1");
     //config.SwaggerEndpoint("/api/docs/v1.1/swagger.json", "Whatsdue API v1.1");
+    config.EnableTryItOutByDefault();
 });
 
 app.Run();

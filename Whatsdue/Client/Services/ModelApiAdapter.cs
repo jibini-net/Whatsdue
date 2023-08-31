@@ -1,6 +1,6 @@
 ﻿using Generated;
 using System.Net.Http.Json;
-using System.Text.Json;
+using Whatsdue.Extensions;
 
 namespace Whatsdue.Services;
 
@@ -22,10 +22,7 @@ public class ModelApiAdapter : IModelApiAdapter
     private async Task PropagateErrorAsync(HttpContent response)
     {
         var content = await response.ReadAsStringAsync();
-        var problem = JsonSerializer.Deserialize<ProblemDetails>(content, new JsonSerializerOptions()
-        {
-            PropertyNameCaseInsensitive = true
-        });
+        var problem = content.FromJson<ProblemDetails>();
 
         if (string.IsNullOrEmpty(problem.detail))
         {
@@ -55,9 +52,6 @@ public class ModelApiAdapter : IModelApiAdapter
             await PropagateErrorAsync(result.Content);
         }
         var content = await result.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<T>(content, new JsonSerializerOptions()
-        {
-            PropertyNameCaseInsensitive = true
-        });
+        return content.FromJson<T>();
     }
 }
